@@ -1,0 +1,9 @@
+# This file should be named "local.properties" and placed in the root directory
+# It contains configuration specific to your local machine
+
+# Location of the Android SDK
+# For Windows: sdk.dir=C\:\\Users\\YourUsername\\AppData\\Local\\Android\\Sdk
+# For macOS: sdk.dir=/Users/YourUsername/Library/Android/sdk
+# For Linux: sdk.dir=/home/YourUsername/Android/Sdk
+
+sdk.dir=/path/to/your/android/sdk
