@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+    <group android:scaleX="0.8"
+        android:scaleY="0.8"
+        android:translateX="10.8"
+        android:translateY="10.8">
+        <!-- Drum icon -->
+        <path
+            android:fillColor="#FFFFFF"
+            android:pathData="M54,20C35,20 20,30 20,42v24c0,12 15,22 34,22s34,-10 34,-22V42C88,30 73,20 54,20z"/>
+        <path
+            android:fillColor="#E0E0E0"
+            android:pathData="M54,40c-15,0 -28,6 -28,14s13,14 28,14s28,-6 28,-14S69,40 54,40z"/>
+        <!-- Musical note -->
+        <path
+            android:fillColor="#FFFFFF"
+            android:pathData="M70,35l-8,-2v20c-1,-0.5 -2.5,-1 -4,-1c-3.3,0 -6,2.7 -6,6s2.7,6 6,6s6,-2.7 6,-6V35z"/>
+    </group>
+</vector>
