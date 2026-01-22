@@ -79,3 +79,12 @@ lint/tmp/
 
 # macOS
 .DS_Store
+
+# API
+api/node_modules/
+api/package-lock.json
+.vercel
+
+# Environment
+.env
+.env.local

@@ -115,9 +115,79 @@ class DrumSheetApp {
             return;
         }
 
-        // Since direct download requires a backend service,
-        // show helpful instructions immediately
-        this.showDownloadInstructions('YouTube', url, videoId);
+        const loadingDiv = document.getElementById('url-loading');
+        loadingDiv.classList.remove('hidden');
+
+        try {
+            // Try to use backend API first
+            const apiUrl = this.getApiUrl();
+            const response = await fetch(`${apiUrl}/api/youtube?url=${encodeURIComponent(url)}`, {
+                method: 'GET',
+                headers: {
+                    'Accept': 'application/json'
+                }
+            });
+
+            if (!response.ok) {
+                throw new Error('API request failed');
+            }
+
+            const data = await response.json();
+
+            if (!data.success || !data.audioUrl) {
+                throw new Error('No audio URL in response');
+            }
+
+            // Download audio from URL
+            const audioResponse = await fetch(data.audioUrl);
+            if (!audioResponse.ok) {
+                throw new Error('Failed to download audio');
+            }
+
+            const audioBlob = await audioResponse.blob();
+            const file = new File([audioBlob], `${data.title || 'youtube'}.mp3`, { type: 'audio/mpeg' });
+
+            loadingDiv.classList.add('hidden');
+            await this.loadAudioFile(file);
+
+            // Show success message
+            this.showSuccessMessage(`✅ YouTube Video geladen: "${data.title}"`);
+
+        } catch (error) {
+            console.error('YouTube API error:', error);
+            loadingDiv.classList.add('hidden');
+
+            // Fallback to manual download instructions
+            this.showDownloadInstructions('YouTube', url, videoId);
+        }
+    }
+
+    getApiUrl() {
+        // Check if we're on GitHub Pages or local
+        if (window.location.hostname.includes('github.io')) {
+            // Use Vercel API if deployed
+            return 'https://song-to-drumsheet.vercel.app';
+        }
+        // Local development
+        return window.location.origin;
+    }
+
+    showSuccessMessage(message) {
+        const urlTab = document.getElementById('url-tab');
+        const successDiv = document.createElement('div');
+        successDiv.className = 'success-message';
+        successDiv.innerHTML = `
+            <div class="success-content">
+                <span class="success-icon">✓</span>
+                <p>${message}</p>
+            </div>
+        `;
+        urlTab.appendChild(successDiv);
+
+        // Remove after 5 seconds
+        setTimeout(() => {
+            successDiv.remove();
+        }, 5000);
     }
 
     async loadFromSpotify(url) {
