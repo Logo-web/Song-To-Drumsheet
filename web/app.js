@@ -108,77 +108,156 @@ class DrumSheetApp {
     }
 
     async loadFromYouTube(url) {
-        const loadingDiv = document.getElementById('url-loading');
-        loadingDiv.classList.remove('hidden');
-
-        try {
-            // Extract video ID
-            const videoId = this.extractYouTubeId(url);
-            if (!videoId) {
-                throw new Error('Ungültige YouTube URL');
-            }
-
-            // Use a CORS proxy and youtube-dl API service
-            // Note: This requires a backend service or public API
-            const apiUrl = `https://yt-download-api.vercel.app/api/audio?url=${encodeURIComponent(url)}`;
-
-            const response = await fetch(apiUrl);
-            if (!response.ok) {
-                throw new Error('Konnte Audio nicht laden');
-            }
-
-            const data = await response.json();
-
-            // Download audio from provided URL
-            const audioResponse = await fetch(data.audioUrl);
-            const audioBlob = await audioResponse.blob();
-
-            // Convert to File object
-            const file = new File([audioBlob], `youtube_${videoId}.mp3`, { type: 'audio/mpeg' });
-            await this.loadAudioFile(file);
-
-            loadingDiv.classList.add('hidden');
-
-        } catch (error) {
-            loadingDiv.classList.add('hidden');
-            console.error('YouTube loading error:', error);
-
-            // Fallback: Show instructions
-            this.showDownloadInstructions('YouTube', url);
+        // Extract video ID
+        const videoId = this.extractYouTubeId(url);
+        if (!videoId) {
+            alert('❌ Ungültige YouTube URL!\n\nBitte verwenden Sie eine gültige YouTube URL wie:\nhttps://www.youtube.com/watch?v=...');
+            return;
         }
+
+        // Since direct download requires a backend service,
+        // show helpful instructions immediately
+        this.showDownloadInstructions('YouTube', url, videoId);
     }
 
     async loadFromSpotify(url) {
+        // Validate Spotify URL
+        if (!url.includes('spotify.com/track/')) {
+            alert('❌ Ungültige Spotify URL!\n\nBitte verwenden Sie eine gültige Spotify Track URL wie:\nhttps://open.spotify.com/track/...');
+            return;
+        }
+
         // Spotify doesn't provide direct audio access via API
         // Show download instructions instead
         this.showDownloadInstructions('Spotify', url);
     }
 
-    showDownloadInstructions(service, url) {
-        const message = service === 'YouTube'
-            ? `YouTube-Audio kann nicht direkt geladen werden.
+    showDownloadInstructions(service, url, videoId = '') {
+        const urlTab = document.getElementById('url-tab');
 
-Bitte folgen Sie diesen Schritten:
+        // Remove old instructions if any
+        const oldInstructions = document.getElementById('download-instructions');
+        if (oldInstructions) {
+            oldInstructions.remove();
+        }
 
-1. Öffnen Sie: https://y2mate.com oder https://ytmp3.cc
-2. Fügen Sie Ihre URL ein: ${url}
-3. Laden Sie die MP3-Datei herunter
-4. Laden Sie die Datei hier im "Datei hochladen" Tab hoch
+        // Create instructions box
+        const instructionsDiv = document.createElement('div');
+        instructionsDiv.id = 'download-instructions';
+        instructionsDiv.className = 'download-instructions';
 
-Oder verwenden Sie Browser-Extensions wie "Video DownloadHelper"`
-            : `Spotify-Audio kann nicht direkt geladen werden.
+        if (service === 'YouTube') {
+            instructionsDiv.innerHTML = `
+                <div class="instructions-header">
+                    <h3>📥 YouTube Audio herunterladen</h3>
+                    <p>Da YouTube-Audio nicht direkt im Browser geladen werden kann, folgen Sie bitte diesen einfachen Schritten:</p>
+                </div>
 
-Bitte folgen Sie diesen Schritten:
+                <div class="instructions-steps">
+                    <div class="instruction-step">
+                        <span class="step-num">1</span>
+                        <div class="step-content">
+                            <strong>Öffnen Sie einen YouTube Downloader:</strong>
+                            <div class="step-links">
+                                <a href="https://ytmp3.nu/AeKl/" target="_blank" class="download-link">ytmp3.nu</a>
+                                <a href="https://www.y2mate.com/" target="_blank" class="download-link">y2mate.com</a>
+                                <a href="https://notube.io/" target="_blank" class="download-link">notube.io</a>
+                            </div>
+                        </div>
+                    </div>
 
-1. Verwenden Sie ein Tool wie "Spotify Downloader" oder "Spotiload"
-2. Öffnen Sie: https://spotifydown.com
-3. Fügen Sie Ihre URL ein: ${url}
-4. Laden Sie die MP3-Datei herunter
-5. Laden Sie die Datei hier im "Datei hochladen" Tab hoch
+                    <div class="instruction-step">
+                        <span class="step-num">2</span>
+                        <div class="step-content">
+                            <strong>Fügen Sie Ihre YouTube-URL ein:</strong>
+                            <div class="url-copy">
+                                <input type="text" value="${url}" readonly class="url-copy-input">
+                                <button onclick="navigator.clipboard.writeText('${url}'); this.textContent='✓ Kopiert!'; setTimeout(() => this.textContent='Kopieren', 2000)" class="btn-copy">Kopieren</button>
+                            </div>
+                        </div>
+                    </div>
 
-Hinweis: Achten Sie auf Copyright-Bestimmungen!`;
+                    <div class="instruction-step">
+                        <span class="step-num">3</span>
+                        <div class="step-content">
+                            <strong>Laden Sie die MP3-Datei herunter</strong>
+                            <p class="step-note">Wählen Sie das MP3-Format und starten Sie den Download.</p>
+                        </div>
+                    </div>
 
-        alert(message);
+                    <div class="instruction-step">
+                        <span class="step-num">4</span>
+                        <div class="step-content">
+                            <strong>Laden Sie die Datei hier hoch</strong>
+                            <button onclick="document.querySelector('[data-tab=file]').click(); document.getElementById('audio-file').click();" class="btn-primary">
+                                📁 Zur Datei-Upload
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="instructions-footer">
+                    <p><small>⚠️ <strong>Hinweis:</strong> Bitte beachten Sie Copyright-Bestimmungen. Nutzen Sie nur Musik, für die Sie die Rechte haben.</small></p>
+                </div>
+            `;
+        } else {
+            instructionsDiv.innerHTML = `
+                <div class="instructions-header">
+                    <h3>📥 Spotify Audio herunterladen</h3>
+                    <p>Spotify erlaubt keinen direkten Audio-Download. Folgen Sie diesen Schritten:</p>
+                </div>
+
+                <div class="instructions-steps">
+                    <div class="instruction-step">
+                        <span class="step-num">1</span>
+                        <div class="step-content">
+                            <strong>Öffnen Sie einen Spotify Downloader:</strong>
+                            <div class="step-links">
+                                <a href="https://spotifydown.com/" target="_blank" class="download-link">spotifydown.com</a>
+                                <a href="https://spotify-downloader.com/" target="_blank" class="download-link">spotify-downloader.com</a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="instruction-step">
+                        <span class="step-num">2</span>
+                        <div class="step-content">
+                            <strong>Fügen Sie Ihre Spotify-URL ein:</strong>
+                            <div class="url-copy">
+                                <input type="text" value="${url}" readonly class="url-copy-input">
+                                <button onclick="navigator.clipboard.writeText('${url}'); this.textContent='✓ Kopiert!'; setTimeout(() => this.textContent='Kopieren', 2000)" class="btn-copy">Kopieren</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="instruction-step">
+                        <span class="step-num">3</span>
+                        <div class="step-content">
+                            <strong>Laden Sie die MP3-Datei herunter</strong>
+                        </div>
+                    </div>
+
+                    <div class="instruction-step">
+                        <span class="step-num">4</span>
+                        <div class="step-content">
+                            <strong>Laden Sie die Datei hier hoch</strong>
+                            <button onclick="document.querySelector('[data-tab=file]').click(); document.getElementById('audio-file').click();" class="btn-primary">
+                                📁 Zur Datei-Upload
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="instructions-footer">
+                    <p><small>⚠️ <strong>Hinweis:</strong> Bitte beachten Sie Copyright-Bestimmungen und Spotify's Nutzungsbedingungen.</small></p>
+                </div>
+            `;
+        }
+
+        urlTab.appendChild(instructionsDiv);
+
+        // Scroll to instructions
+        instructionsDiv.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
     }
 
     extractYouTubeId(url) {
