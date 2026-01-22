@@ -240,6 +240,145 @@ header h1 {
     to { transform: rotate(360deg); }
 }
 
+/* Download Instructions */
+.download-instructions {
+    margin-top: 24px;
+    padding: 24px;
+    background: white;
+    border-radius: 12px;
+    border: 2px solid var(--primary);
+    animation: fadeIn 0.4s ease-out;
+}
+
+.instructions-header {
+    margin-bottom: 24px;
+    padding-bottom: 16px;
+    border-bottom: 2px solid var(--border);
+}
+
+.instructions-header h3 {
+    color: var(--primary);
+    margin-bottom: 8px;
+    font-size: 1.3rem;
+}
+
+.instructions-header p {
+    color: var(--text-light);
+    font-size: 0.95rem;
+}
+
+.instructions-steps {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.instruction-step {
+    display: flex;
+    gap: 16px;
+    align-items: flex-start;
+}
+
+.step-num {
+    width: 32px;
+    height: 32px;
+    background: var(--primary);
+    color: white;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    flex-shrink: 0;
+    font-size: 0.9rem;
+}
+
+.step-content {
+    flex: 1;
+}
+
+.step-content strong {
+    display: block;
+    margin-bottom: 8px;
+    color: var(--text);
+}
+
+.step-note {
+    margin-top: 4px;
+    font-size: 0.9rem;
+    color: var(--text-light);
+}
+
+.step-links {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+    margin-top: 8px;
+}
+
+.download-link {
+    padding: 8px 16px;
+    background: var(--background);
+    border: 2px solid var(--primary);
+    border-radius: 6px;
+    color: var(--primary);
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 0.9rem;
+    transition: all 0.2s;
+}
+
+.download-link:hover {
+    background: var(--primary);
+    color: white;
+    transform: translateY(-2px);
+}
+
+.url-copy {
+    display: flex;
+    gap: 8px;
+    margin-top: 8px;
+}
+
+.url-copy-input {
+    flex: 1;
+    padding: 10px 14px;
+    border: 2px solid var(--border);
+    border-radius: 6px;
+    font-size: 0.9rem;
+    background: var(--background);
+    color: var(--text);
+    font-family: monospace;
+}
+
+.btn-copy {
+    padding: 10px 20px;
+    background: var(--secondary);
+    color: white;
+    border: none;
+    border-radius: 6px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+    white-space: nowrap;
+}
+
+.btn-copy:hover {
+    background: #7DD3C0;
+    transform: translateY(-2px);
+}
+
+.instructions-footer {
+    margin-top: 20px;
+    padding-top: 16px;
+    border-top: 2px solid var(--border);
+}
+
+.instructions-footer p {
+    color: var(--text-light);
+    text-align: center;
+}
+
 .file-info {
     display: flex;
     align-items: center;
@@ -487,6 +626,26 @@ footer a:hover {
 
     .export-buttons button {
         width: 100%;
+    }
+
+    .download-instructions {
+        padding: 16px;
+    }
+
+    .step-links {
+        flex-direction: column;
+    }
+
+    .download-link {
+        text-align: center;
+    }
+
+    .url-copy {
+        flex-direction: column;
+    }
+
+    .url-copy-input {
+        font-size: 0.8rem;
     }
 }
 
