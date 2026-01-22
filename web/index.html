@@ -13,24 +13,66 @@
             <p class="subtitle">Erstelle Schlagzeugnoten aus deiner Musik - direkt im Browser!</p>
         </header>
 
-        <!-- Step 1: File Upload -->
+        <!-- Step 1: Audio Source -->
         <section class="card" id="upload-section">
             <div class="step-header">
                 <span class="step-number">1</span>
-                <h2>Audiodatei auswählen</h2>
+                <h2>Audio-Quelle wählen</h2>
             </div>
-            <div class="upload-area" id="upload-area">
-                <input type="file" id="audio-file" accept="audio/*" hidden>
-                <label for="audio-file" class="upload-label">
-                    <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
-                        <polyline points="17 8 12 3 7 8"></polyline>
-                        <line x1="12" y1="3" x2="12" y2="15"></line>
-                    </svg>
-                    <span>Klicke hier oder ziehe eine Datei hierher</span>
-                    <small>MP3, WAV, OGG, FLAC</small>
-                </label>
+
+            <!-- Tab Switcher -->
+            <div class="tab-switcher">
+                <button class="tab-btn active" data-tab="file">
+                    📁 Datei hochladen
+                </button>
+                <button class="tab-btn" data-tab="url">
+                    🔗 YouTube / Spotify Link
+                </button>
             </div>
+
+            <!-- File Upload Tab -->
+            <div class="tab-content active" id="file-tab">
+                <div class="upload-area" id="upload-area">
+                    <input type="file" id="audio-file" accept="audio/*" hidden>
+                    <label for="audio-file" class="upload-label">
+                        <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                            <polyline points="17 8 12 3 7 8"></polyline>
+                            <line x1="12" y1="3" x2="12" y2="15"></line>
+                        </svg>
+                        <span>Klicke hier oder ziehe eine Datei hierher</span>
+                        <small>MP3, WAV, OGG, FLAC</small>
+                    </label>
+                </div>
+            </div>
+
+            <!-- URL Input Tab -->
+            <div class="tab-content" id="url-tab">
+                <div class="url-input-container">
+                    <div class="input-group">
+                        <input
+                            type="text"
+                            id="audio-url"
+                            placeholder="YouTube oder Spotify Link hier einfügen..."
+                            class="url-input"
+                        >
+                        <button id="load-url-btn" class="btn-primary">
+                            Laden
+                        </button>
+                    </div>
+                    <div class="url-examples">
+                        <small><strong>Beispiele:</strong></small>
+                        <small>• YouTube: https://www.youtube.com/watch?v=...</small>
+                        <small>• Spotify: https://open.spotify.com/track/...</small>
+                    </div>
+                    <div id="url-loading" class="url-loading hidden">
+                        <div class="spinner"></div>
+                        <p>Lade Audio von URL...</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- File/URL Info -->
             <div id="file-info" class="file-info hidden">
                 <span id="file-name"></span>
                 <button id="remove-file" class="btn-secondary">Entfernen</button>

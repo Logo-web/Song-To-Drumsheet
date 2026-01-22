@@ -17,12 +17,23 @@ class DrumSheetApp {
     }
 
     setupEventListeners() {
+        // Tab switching
+        document.querySelectorAll('.tab-btn').forEach(btn => {
+            btn.addEventListener('click', (e) => this.switchTab(e.target.dataset.tab));
+        });
+
         // File upload
         const fileInput = document.getElementById('audio-file');
         const uploadArea = document.getElementById('upload-area');
         const removeFileBtn = document.getElementById('remove-file');
 
         fileInput.addEventListener('change', (e) => this.handleFileSelect(e));
+
+        // URL loading
+        document.getElementById('load-url-btn').addEventListener('click', () => this.loadFromURL());
+        document.getElementById('audio-url').addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') this.loadFromURL();
+        });
 
         // Drag & Drop
         uploadArea.addEventListener('dragover', (e) => {
@@ -57,11 +68,131 @@ class DrumSheetApp {
         document.getElementById('export-pdf').addEventListener('click', () => this.exportAsPDF());
     }
 
+    switchTab(tab) {
+        // Update tab buttons
+        document.querySelectorAll('.tab-btn').forEach(btn => {
+            btn.classList.toggle('active', btn.dataset.tab === tab);
+        });
+
+        // Update tab content
+        document.querySelectorAll('.tab-content').forEach(content => {
+            content.classList.remove('active');
+        });
+        document.getElementById(`${tab}-tab`).classList.add('active');
+    }
+
     handleFileSelect(event) {
         const file = event.target.files[0];
         if (file) {
             this.loadAudioFile(file);
         }
+    }
+
+    async loadFromURL() {
+        const urlInput = document.getElementById('audio-url');
+        const url = urlInput.value.trim();
+
+        if (!url) {
+            alert('Bitte geben Sie eine URL ein!');
+            return;
+        }
+
+        // Detect service
+        if (url.includes('youtube.com') || url.includes('youtu.be')) {
+            await this.loadFromYouTube(url);
+        } else if (url.includes('spotify.com')) {
+            await this.loadFromSpotify(url);
+        } else {
+            alert('Nur YouTube und Spotify Links werden unterstützt!');
+        }
+    }
+
+    async loadFromYouTube(url) {
+        const loadingDiv = document.getElementById('url-loading');
+        loadingDiv.classList.remove('hidden');
+
+        try {
+            // Extract video ID
+            const videoId = this.extractYouTubeId(url);
+            if (!videoId) {
+                throw new Error('Ungültige YouTube URL');
+            }
+
+            // Use a CORS proxy and youtube-dl API service
+            // Note: This requires a backend service or public API
+            const apiUrl = `https://yt-download-api.vercel.app/api/audio?url=${encodeURIComponent(url)}`;
+
+            const response = await fetch(apiUrl);
+            if (!response.ok) {
+                throw new Error('Konnte Audio nicht laden');
+            }
+
+            const data = await response.json();
+
+            // Download audio from provided URL
+            const audioResponse = await fetch(data.audioUrl);
+            const audioBlob = await audioResponse.blob();
+
+            // Convert to File object
+            const file = new File([audioBlob], `youtube_${videoId}.mp3`, { type: 'audio/mpeg' });
+            await this.loadAudioFile(file);
+
+            loadingDiv.classList.add('hidden');
+
+        } catch (error) {
+            loadingDiv.classList.add('hidden');
+            console.error('YouTube loading error:', error);
+
+            // Fallback: Show instructions
+            this.showDownloadInstructions('YouTube', url);
+        }
+    }
+
+    async loadFromSpotify(url) {
+        // Spotify doesn't provide direct audio access via API
+        // Show download instructions instead
+        this.showDownloadInstructions('Spotify', url);
+    }
+
+    showDownloadInstructions(service, url) {
+        const message = service === 'YouTube'
+            ? `YouTube-Audio kann nicht direkt geladen werden.
+
+Bitte folgen Sie diesen Schritten:
+
+1. Öffnen Sie: https://y2mate.com oder https://ytmp3.cc
+2. Fügen Sie Ihre URL ein: ${url}
+3. Laden Sie die MP3-Datei herunter
+4. Laden Sie die Datei hier im "Datei hochladen" Tab hoch
+
+Oder verwenden Sie Browser-Extensions wie "Video DownloadHelper"`
+            : `Spotify-Audio kann nicht direkt geladen werden.
+
+Bitte folgen Sie diesen Schritten:
+
+1. Verwenden Sie ein Tool wie "Spotify Downloader" oder "Spotiload"
+2. Öffnen Sie: https://spotifydown.com
+3. Fügen Sie Ihre URL ein: ${url}
+4. Laden Sie die MP3-Datei herunter
+5. Laden Sie die Datei hier im "Datei hochladen" Tab hoch
+
+Hinweis: Achten Sie auf Copyright-Bestimmungen!`;
+
+        alert(message);
+    }
+
+    extractYouTubeId(url) {
+        const patterns = [
+            /(?:youtube\.com\/watch\?v=|youtu\.be\/)([^&\n?#]+)/,
+            /youtube\.com\/embed\/([^&\n?#]+)/
+        ];
+
+        for (const pattern of patterns) {
+            const match = url.match(pattern);
+            if (match) return match[1];
+        }
+
+        return null;
     }
 
     async loadAudioFile(file) {

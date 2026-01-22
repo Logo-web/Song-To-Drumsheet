@@ -9,6 +9,7 @@ Nutzen Sie die App **direkt im Browser** - keine Installation nötig!
 ## ✨ Features
 
 - 🎵 **Audio-Upload**: MP3, WAV, OGG, FLAC
+- 🔗 **YouTube & Spotify Links**: Unterstützung für externe Audio-Quellen
 - 🥁 **Automatische Beat-Erkennung**
 - 📊 **BPM-Berechnung**
 - 🎼 **Schlagzeugnoten-Visualisierung**
@@ -17,9 +18,17 @@ Nutzen Sie die App **direkt im Browser** - keine Installation nötig!
 
 ## 📱 Verwendung
 
-### 1. Audiodatei auswählen
-- Klicken Sie auf das Upload-Feld oder
-- Ziehen Sie eine Audiodatei per Drag & Drop
+### 1. Audio-Quelle wählen
+
+**Option A: Datei hochladen**
+- Klicken Sie auf "📁 Datei hochladen"
+- Klicken Sie auf das Upload-Feld oder ziehen Sie eine Datei per Drag & Drop
+
+**Option B: YouTube/Spotify Link**
+- Klicken Sie auf "🔗 YouTube / Spotify Link"
+- Fügen Sie einen YouTube- oder Spotify-Link ein
+- Klicken Sie auf "Laden"
+- Folgen Sie ggf. den Anweisungen zum Download
 
 ### 2. Analysieren
 - Klicken Sie auf "Jetzt analysieren"
