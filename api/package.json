@@ -1,0 +1,12 @@
+{
+  "name": "song-to-drumsheet-api",
+  "version": "1.0.0",
+  "description": "Backend API for YouTube/Spotify audio extraction",
+  "main": "youtube.js",
+  "dependencies": {
+    "ytdl-core": "^4.11.5"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}

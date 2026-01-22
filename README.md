@@ -25,9 +25,19 @@ Keine Installation nötig - funktioniert auf jedem Gerät mit Browser!
 ## Funktionen
 
 - **Audio-Eingabe**: Laden Sie MP3, WAV oder andere Audiodateien
+- **YouTube/Spotify Links**: Geben Sie einfach einen Link ein (optional mit Backend)
 - **Beat-Erkennung**: Automatische Analyse des Rhythmus und der Schlagzeugmuster
 - **Noten-Generierung**: Erstellt lesbare Schlagzeugnoten aus dem analysierten Audio
 - **Export**: Speichern und teilen Sie die generierten Noten
+
+### 🚀 Neu: Automatischer YouTube-Download
+
+Mit dem optionalen Backend-Service werden YouTube-Links **vollautomatisch** verarbeitet!
+
+- ✅ **Ohne Backend:** Anleitung zum manuellen Download
+- 🚀 **Mit Backend:** Automatischer Download in Sekunden
+
+[➡️ Backend einrichten (5 Minuten)](BACKEND-DEPLOYMENT.md)
 
 ## Features
 
