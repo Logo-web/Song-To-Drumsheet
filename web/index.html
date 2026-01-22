@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Song to Drumsheet - Web App</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🥁 Song to Drumsheet</h1>
+            <p class="subtitle">Erstelle Schlagzeugnoten aus deiner Musik - direkt im Browser!</p>
+        </header>
+
+        <!-- Step 1: File Upload -->
+        <section class="card" id="upload-section">
+            <div class="step-header">
+                <span class="step-number">1</span>
+                <h2>Audiodatei auswählen</h2>
+            </div>
+            <div class="upload-area" id="upload-area">
+                <input type="file" id="audio-file" accept="audio/*" hidden>
+                <label for="audio-file" class="upload-label">
+                    <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                        <polyline points="17 8 12 3 7 8"></polyline>
+                        <line x1="12" y1="3" x2="12" y2="15"></line>
+                    </svg>
+                    <span>Klicke hier oder ziehe eine Datei hierher</span>
+                    <small>MP3, WAV, OGG, FLAC</small>
+                </label>
+            </div>
+            <div id="file-info" class="file-info hidden">
+                <span id="file-name"></span>
+                <button id="remove-file" class="btn-secondary">Entfernen</button>
+            </div>
+        </section>
+
+        <!-- Step 2: Analysis -->
+        <section class="card" id="analysis-section">
+            <div class="step-header">
+                <span class="step-number">2</span>
+                <h2>Lied analysieren</h2>
+            </div>
+            <button id="analyze-btn" class="btn-primary" disabled>
+                <span id="analyze-text">Jetzt analysieren</span>
+            </button>
+            <div id="progress-container" class="progress-container hidden">
+                <div class="progress-bar">
+                    <div id="progress-fill" class="progress-fill"></div>
+                </div>
+                <p id="progress-text">Analysiere Audio...</p>
+            </div>
+            <div id="analysis-result" class="analysis-result hidden">
+                <div class="result-item">
+                    <strong>BPM:</strong> <span id="bpm-value">--</span>
+                </div>
+                <div class="result-item">
+                    <strong>Schläge erkannt:</strong> <span id="beats-value">--</span>
+                </div>
+                <div class="result-item">
+                    <strong>Dauer:</strong> <span id="duration-value">--</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- Step 3: Sheet Music Display -->
+        <section class="card" id="sheet-section" class="hidden">
+            <div class="step-header">
+                <span class="step-number">3</span>
+                <h2>Schlagzeugnoten</h2>
+            </div>
+            <div id="sheet-controls" class="sheet-controls">
+                <button id="zoom-out" class="btn-icon" title="Verkleinern">−</button>
+                <button id="zoom-in" class="btn-icon" title="Vergrößern">+</button>
+            </div>
+            <div id="sheet-container" class="sheet-container">
+                <canvas id="drum-sheet-canvas"></canvas>
+            </div>
+            <div class="legend">
+                <h3>Legende:</h3>
+                <div class="legend-items">
+                    <div class="legend-item">
+                        <span class="legend-color" style="background: #6C5CE7;"></span>
+                        <span>Kick (Bass)</span>
+                    </div>
+                    <div class="legend-item">
+                        <span class="legend-color" style="background: #FF6B9D;"></span>
+                        <span>Snare</span>
+                    </div>
+                    <div class="legend-item">
+                        <span class="legend-color" style="background: #95E1D3;"></span>
+                        <span>Hi-Hat</span>
+                    </div>
+                    <div class="legend-item">
+                        <span class="legend-color" style="background: #FFE66D;"></span>
+                        <span>Tom</span>
+                    </div>
+                    <div class="legend-item">
+                        <span class="legend-color" style="background: #FF6B6B;"></span>
+                        <span>Crash</span>
+                    </div>
+                    <div class="legend-item">
+                        <span class="legend-color" style="background: #4ECDC4;"></span>
+                        <span>Ride</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Step 4: Export -->
+        <section class="card" id="export-section" class="hidden">
+            <div class="step-header">
+                <span class="step-number">4</span>
+                <h2>Exportieren</h2>
+            </div>
+            <div class="export-buttons">
+                <button id="export-png" class="btn-primary">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                        <polyline points="7 10 12 15 17 10"></polyline>
+                        <line x1="12" y1="15" x2="12" y2="3"></line>
+                    </svg>
+                    Als PNG speichern
+                </button>
+                <button id="export-pdf" class="btn-primary">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                        <polyline points="14 2 14 8 20 8"></polyline>
+                    </svg>
+                    Als PDF speichern
+                </button>
+            </div>
+        </section>
+
+        <footer>
+            <p>Made with ❤️ | <a href="https://github.com/Logo-web/Song-To-Drumsheet" target="_blank">GitHub</a></p>
+            <p><small>Alle Verarbeitung erfolgt lokal in Ihrem Browser. Keine Daten werden hochgeladen.</small></p>
+        </footer>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="app.js"></script>
+</body>
+</html>

@@ -1,6 +1,26 @@
 # Song-To-Drumsheet
 
-Eine Android-App, die aus einem Lied automatisch Schlagzeugnoten generiert.
+🥁 Erstelle automatisch Schlagzeugnoten aus deiner Musik!
+
+## 🌐 **WEB-VERSION - Jetzt sofort im Browser nutzen!**
+
+**➡️ [Direkt zur Web-App](https://logo-web.github.io/Song-To-Drumsheet/web/)**
+
+Keine Installation nötig - funktioniert auf jedem Gerät mit Browser!
+
+---
+
+## 📱 Verfügbar als:
+
+1. **🌐 Web-App** (Empfohlen für sofortige Nutzung)
+   - Keine Installation nötig
+   - Funktioniert auf allen Geräten
+   - [Jetzt öffnen →](https://logo-web.github.io/Song-To-Drumsheet/web/)
+
+2. **📱 Android App** (Für Offline-Nutzung)
+   - Native Android-App
+   - Funktioniert offline
+   - [Installationsanleitung →](INSTALLATION.md)
 
 ## Funktionen
 
